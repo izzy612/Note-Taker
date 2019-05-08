@@ -1,118 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
-<link rel="stylesheet" href="style.css">
-<title>Notes</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+  <link rel="stylesheet" href="style.css">
+  <title>Notes</title>
 </head>
+
 <body class="bg-secondary">
 
-    <nav class = "navbar navbar-success bg-dark">
-        <a class = "navbar-brand text-light" href = "/">📝 Budget Management</a>
-    </nav>
+  <nav class="navbar navbar-success bg-dark">
+    <a class="navbar-brand text-light" href="/">📝 Budget Management</a>
+  </nav>
 
-    <br><br><br>
-    
-      <div class="container-fluid">
-        <div class="row">
-                     <!-- Display Notes -->
-          <div class="col-12 col-md-7 list-container">
-            <div class="card">
-              <div class="card-header bg-success">
-                <h2 class="text-center">Notes</h2>
-               </div>
-               <div class="card-body bg-success">
-                 <ul class="list-group" id="notes">
-                    <!-- Them Notes -->
-                 </ul>
-               </div>
+  <br><br><br>
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Display Notes -->
+      <div class="col-12 col-md-7 list-container">
+        <div class="card">
+          <div class="card-header bg-success">
+            <h2 class="text-center">Notes</h2>
+          </div>
+          <div class="card-body bg-success">
+            <ul class="list-group" id="notes">
+              <!-- Them Notes -->
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- End of Displaying Notes -->
+
+
+      <!-- Adding Notes -->
+
+      <div class="col-12 col-md-5 list-conatiner">
+        <div class="card">
+          <div class="card-body bg-success">
+            <h4 class="card-title text-center">Add a Content</h4>
+            <div class="form-group">
+              <input type="text" class="form-control note-title" id="title" placeholder="Title">
             </div>
-           </div>
-              <!-- End of Displaying Notes -->
-    
-              
-              <!-- Adding Notes -->
-    
-         <div class="col-12 col-md-5 list-conatiner">
-            <div class="card">
-              <div class="card-body bg-success">
-                <h4 class="card-title text-center">Add a Content</h4>
-                   <div class="form-group">
-                    <input type="text" class="form-control note-title" id="title" placeholder="Title">
-                     </div>
-    
-                  <div class="form-group">
-                  <textarea class="form-control note-textarea"             id="text-body" placeholder="Add a Text"></textarea>
-                  <br>
-                  <div class="col text-center">
-                  <button id="submit" button type="submit" class="btn btn-dark btn-lg">Submit</button>
-                  </div>
-                 </div>
-                </div>
-               </div>
-             </div>
+
+            <div class="form-group">
+              <textarea class="form-control note-textarea" id="text-body" placeholder="Add a Text"></textarea>
+              <br>
+              <div class="col text-center">
+                <button id="submit" button type="submit" class="btn btn-dark btn-lg">Submit</button>
+              </div>
             </div>
           </div>
-    
-    <script type="text/javascript">
+        </div>
+      </div>
+    </div>
+  </div>
 
-    $("#submit").on("click", function (event) {
-      event.preventDefault();
-      var addNote = {
-        title: $("#title").val().trim(),
-        body: $("text-body").val().trim()
-      }
-      $.ajax({
-        url:"/api/notes",
-        method: "POST",
-        data: addNote 
-      })
-      .then(function(data){
-        $("#title").val(""),
-        $("#text-body").val("")
-      })
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-      $("#title").val("");
-      $("#text-body").val("");
-      $("#notes").empty("");
+  <script type="text/javascript">
+  $(document).on('click', '#submit', function(event) {
+	event.preventDefault();
+	var addNote = {
+		title: $('#title').val().trim(),
+		body: $('#text-body').val().trim()
+	};
+	$.ajax({
+		url: '/api/notes',
+		method: 'POST',
+		data: addNote
+	}).then(function(data) {
+		$('#title').val(''), $('#text-body').val('');
+	});
 
-      applyNotes();
-      
-    })
-    
-    function applyNotes() {
-      $.ajax({
-        url:"/api/notes",
-        method: "GET"
-      })
-      .then(function(data){
-        for(let i = 0; i < data.length; i++ )
-        var notes = $("#notes");
-        var theContent = $("<li class = 'list-group-item'>");
+	$('#title').val('');
+	$('#text-body').val('');
+	$('#notes').empty('');
 
-        theContent.append(
-          $("<h4>").text(data[i].title),
-          $("<hr>"),
-          $("<p>").text(data[i].txt),
-          $("<a href = '#' class = 'delete btn btn-dark'>").text("Delete")
-        );
-         
-        theContent.attr("data", data[i].id);
-        notes.append(theContent);
-            
-          }
-        )
-      }
-    
-    
-    </script>
+	applyNotes();
+});
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+function applyNotes() {
+	$.ajax({
+		url: '/api/notes',
+		method: 'GET'
+	}).then(function(data) {
+		console.log(data);
+		for (let i = 0; i < data.length; i++) {
+			var notes = $('#notes');
+			var theContent = $("<li class = 'list-group-item'>");
+
+			theContent.append(
+				$('<h4>').text(data[i].title),
+				$('<hr>'),
+				$('<p>').text(data[i].txt),
+				$("<a href = '#' class = 'delete btn btn-dark'>").text('Delete')
+			);
+
+			theContent.attr('data', data[i].id);
+			notes.append(theContent);
+		}
+	});
+}
+
+applyNotes()  
+  </script>
+
 </body>
+
 </html>
