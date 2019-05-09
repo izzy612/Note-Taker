@@ -29,14 +29,12 @@ app.get("/api/notes", function (req, res) {
 });
 
 app.post("/api/notes", function (req, res) {
+  console.log(req.body)
   connection.query("INSERT INTO tables SET ?",
-    req.txt, function (err, res) {
-      if (err) {
-        return res.json(err);
-      }
-      else {
-        console.log(res);
-      }
+    req.body, function (err, result) {
+      if (err) throw err
+      res.json(result)
+
     
     });
 });

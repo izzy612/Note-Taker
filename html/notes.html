@@ -69,7 +69,7 @@
 	event.preventDefault();
 	var addNote = {
 		title: $('#title').val().trim(),
-		body: $('#text-body').val().trim()
+		txt: $('#text-body').val().trim()
 	};
 	$.ajax({
 		url: '/api/notes',
