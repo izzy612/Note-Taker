@@ -14,7 +14,7 @@
 <body class="bg-secondary">
 
   <nav class="navbar navbar-success bg-dark">
-    <a class="navbar-brand text-light" href="/">📝 Budget Management</a>
+    <a class="navbar-brand text-light" href="/">📝📝📝</a>
   </nav>
 
   <br><br><br>
@@ -22,6 +22,7 @@
   <div class="container-fluid">
     <div class="row">
       <!-- Display Notes -->
+      
       <div class="col-12 col-md-7 list-container">
         <div class="card">
           <div class="card-header bg-success">
@@ -29,11 +30,13 @@
           </div>
           <div class="card-body bg-success">
             <ul class="list-group" id="notes">
+          
               <!-- Them Notes -->
             </ul>
           </div>
         </div>
       </div>
+    
       <!-- End of Displaying Notes -->
 
 
@@ -65,51 +68,70 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
   <script type="text/javascript">
-  $(document).on('click', '#submit', function(event) {
-	event.preventDefault();
-	var addNote = {
-		title: $('#title').val().trim(),
-		txt: $('#text-body').val().trim()
-	};
-	$.ajax({
-		url: '/api/notes',
-		method: 'POST',
-		data: addNote
-	}).then(function(data) {
-		$('#title').val(''), $('#text-body').val('');
-	});
+    $(document).on('click', '#submit', function (event) {
+      event.preventDefault();
+      var addNote = {
+        title: $('#title').val().trim(),
+        txt: $('#text-body').val().trim()
+      };
+      $.ajax({
+        url: '/api/notes',
+        method: 'POST',
+        data: addNote
+      }).then(function (data) {
+        $('#title').val(''), $('#text-body').val('');
+      });
 
-	$('#title').val('');
-	$('#text-body').val('');
-	$('#notes').empty('');
+      $('#title').val('');
+      $('#text-body').val('');
+      $('#notes').empty('');
 
-	applyNotes();
-});
+      applyNotes();
+    });
 
-function applyNotes() {
-	$.ajax({
-		url: '/api/notes',
-		method: 'GET'
-	}).then(function(data) {
-		console.log(data);
-		for (let i = 0; i < data.length; i++) {
-			var notes = $('#notes');
-			var theContent = $("<li class = 'list-group-item'>");
+    function applyNotes() {
+      $.ajax({
+        url: '/api/notes',
+        method: 'GET'
+      }).then(function (data) {
+        console.log(data);
+        for (let i = 0; i < data.length; i++) {
+          var notes = $('#notes');
+          var theContent = $("<li class = 'list-group-item'>");
 
-			theContent.append(
-				$('<h4>').text(data[i].title),
-				$('<hr>'),
-				$('<p>').text(data[i].txt),
-				$("<a href = '#' class = 'delete btn btn-dark'>").text('Delete')
-			);
+          theContent.append(
+            $('<h4>').text(data[i].title),
+            $('<hr>'),
+            $('<p>').text(data[i].txt),
+            $("<a href = '#' class = 'delete-note btn btn-dark'>").text('Delete')
+          );
 
-			theContent.attr('data', data[i].id);
-			notes.append(theContent);
-		}
-	});
-}
+          theContent.attr('data', data[i].id);
+          notes.append(theContent);
+        }
+      });
+    }
 
-applyNotes()  
+
+    $(document).on("click", ".delete-note", function (event) {
+      event.preventDefault();
+      var deleteNote = $(this).parent().attr("data");
+      var noteID =parseInt(deleteNote);
+
+      $.ajax({
+          url: "/api/notes/" + deleteNote,
+          method: "DELETE",
+        })
+        .then(function () {
+         $("#notes").empty();
+
+          applyNotes();
+        })
+
+    })
+
+    applyNotes();
+
   </script>
 
 </body>
