@@ -7,6 +7,8 @@ https://note-taker123.herokuapp.com/
    
    
    In this example I posted notes about few music festivals.
+  
+  <img width="1392" alt="Screen Shot 2019-05-13 at 3 42 07 PM" src="https://user-images.githubusercontent.com/48463632/57649295-d83d8c80-7595-11e9-9bc5-3bb44407c2cd.png">
    
    
 
